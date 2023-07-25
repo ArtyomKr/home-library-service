@@ -1,15 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { randomUUID } from 'crypto'
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private readonly users: User[] = [];
+
+  create({ login, password }: CreateUserDto) {
+    const user: User = {
+      id: randomUUID(),
+      login,
+      password,
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    }
+    this.users.push(user);
+    return user;
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.users;
   }
 
   findOne(id: number) {

@@ -19,7 +19,10 @@ export class UserService {
       updatedAt: Date.now(),
     }
     this.users.push(user);
-    return user;
+
+    const safeUser = Object.assign({}, user);
+    delete safeUser.password;
+    return safeUser;
   }
 
   findAll() {
@@ -29,7 +32,10 @@ export class UserService {
   findOne(id: string) {
     const user = this.users.find((user) => user.id === id);
     if (!user) throw new BusinessError('User not found', 404);
-    return user;
+
+    const safeUser = Object.assign({}, user);
+    delete safeUser.password;
+    return safeUser;
   }
 
   update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
@@ -37,7 +43,12 @@ export class UserService {
     if (!user) throw new BusinessError('User not found', 404);
     if (user.password !== oldPassword) throw new BusinessError('Password is incorrect', 403);
     user.password = newPassword;
-    return user;
+    user.updatedAt = Date.now();
+    user.version++;
+
+    const safeUser = Object.assign({}, user);
+    delete safeUser.password;
+    return safeUser;
   }
 
   remove(id: string) {

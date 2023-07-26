@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, UseFilters, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, UseFilters, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
@@ -31,6 +31,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @UseFilters(BusinessErrorFilter)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.remove(id);

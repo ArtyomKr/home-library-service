@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { randomUUID } from 'crypto'
+import { BusinessError } from '../utils/businessError';
 
 @Injectable()
 export class UserService {
@@ -25,15 +26,23 @@ export class UserService {
     return this.users;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string) {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) throw new BusinessError('User not found', 404);
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) throw new BusinessError('User not found', 404);
+    if (user.password !== oldPassword) throw new BusinessError('Password is incorrect', 403);
+    user.password = newPassword;
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index === -1) throw new BusinessError('User not found', 404);
+    return this.users.splice(index, 1);
   }
 }

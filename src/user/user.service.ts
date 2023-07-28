@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'crypto';
 import { BusinessError } from '../utils/businessError';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class UserService {
       version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-    }
+    };
     this.users.push(user);
 
     const safeUser = Object.assign({}, user);
@@ -41,7 +41,8 @@ export class UserService {
   update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
     const user = this.users.find((user) => user.id === id);
     if (!user) throw new BusinessError('User not found', 404);
-    if (user.password !== oldPassword) throw new BusinessError('Password is incorrect', 403);
+    if (user.password !== oldPassword)
+      throw new BusinessError('Password is incorrect', 403);
     user.password = newPassword;
     user.updatedAt = Date.now();
     user.version++;

@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, UseFilters, } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  UseFilters,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
@@ -26,7 +37,10 @@ export class UserController {
 
   @Put(':id')
   @UseFilters(BusinessErrorFilter)
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() UpdatePasswordDto: UpdatePasswordDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() UpdatePasswordDto: UpdatePasswordDto,
+  ) {
     return this.userService.update(id, UpdatePasswordDto);
   }
 

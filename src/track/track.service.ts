@@ -4,10 +4,11 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
 import { randomUUID } from 'crypto';
 import { BusinessError } from '../utils/businessError';
+import { getDB } from '../db';
 
 @Injectable()
 export class TrackService {
-  private readonly tracks: Track[] = [];
+  private readonly tracks: Track[] = getDB().tracks;
 
   create({ name, duration, artistId, albumId }: CreateTrackDto) {
     const track = {

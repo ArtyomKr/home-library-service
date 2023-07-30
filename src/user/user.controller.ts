@@ -39,9 +39,9 @@ export class UserController {
   @UseFilters(BusinessErrorFilter)
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() UpdatePasswordDto: UpdatePasswordDto,
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    return this.userService.update(id, UpdatePasswordDto);
+    return this.userService.update(id, updatePasswordDto);
   }
 
   @Delete(':id')

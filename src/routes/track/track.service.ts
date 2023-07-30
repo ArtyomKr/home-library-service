@@ -3,8 +3,8 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
 import { randomUUID } from 'crypto';
-import { BusinessError } from '../utils/businessError';
-import { getDB } from '../db';
+import { BusinessError } from '../../utils/businessError';
+import { getDB } from '../../db';
 
 @Injectable()
 export class TrackService {

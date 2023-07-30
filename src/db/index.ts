@@ -1,8 +1,8 @@
-import { User } from '../user/entities/user.entity';
-import { Track } from '../track/entities/track.entity';
-import { Artist } from '../artist/entities/artist.entity';
-import { Album } from '../album/entities/album.entity';
-import { Favourites } from '../favourites/entities/favourites.entity';
+import { User } from '../routes/user/entities/user.entity';
+import { Track } from '../routes/track/entities/track.entity';
+import { Artist } from '../routes/artist/entities/artist.entity';
+import { Album } from '../routes/album/entities/album.entity';
+import { Favourites } from '../routes/favourites/entities/favourites.entity';
 
 interface IDB {
   users: User[];

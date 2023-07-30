@@ -9,7 +9,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { FavouritesService } from './favourites.service';
-import { BusinessErrorFilter } from '../utils/businessError.filter';
+import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
 @Controller('favs')
 export class FavouritesController {

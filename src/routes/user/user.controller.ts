@@ -13,7 +13,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
-import { BusinessErrorFilter } from '../utils/businessError.filter';
+import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
 @Controller('user')
 export class UserController {

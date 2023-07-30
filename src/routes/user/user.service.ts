@@ -3,8 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { randomUUID } from 'crypto';
-import { BusinessError } from '../utils/businessError';
-import { getDB } from '../db';
+import { BusinessError } from '../../utils/businessError';
+import { getDB } from '../../db';
 
 @Injectable()
 export class UserService {

@@ -3,8 +3,8 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entities/artist.entity';
 import { randomUUID } from 'crypto';
-import { BusinessError } from '../utils/businessError';
-import { getDB } from '../db';
+import { BusinessError } from '../../utils/businessError';
+import { getDB } from '../../db';
 
 @Injectable()
 export class ArtistService {

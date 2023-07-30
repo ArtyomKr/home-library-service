@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Favourites } from './entities/favourites.entity';
-import { getDB } from '../db';
-import { BusinessError } from '../utils/businessError';
+import { getDB } from '../../db';
+import { BusinessError } from '../../utils/businessError';
 
 @Injectable()
 export class FavouritesService {

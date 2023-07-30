@@ -3,8 +3,8 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { randomUUID } from 'crypto';
-import { BusinessError } from '../utils/businessError';
-import { getDB } from '../db';
+import { BusinessError } from '../../utils/businessError';
+import { getDB } from '../../db';
 
 @Injectable()
 export class AlbumService {

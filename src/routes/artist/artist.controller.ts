@@ -13,7 +13,7 @@ import {
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { BusinessErrorFilter } from '../utils/businessError.filter';
+import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
 @Controller('artist')
 export class ArtistController {

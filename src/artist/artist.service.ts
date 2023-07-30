@@ -42,6 +42,13 @@ export class ArtistService {
     getDB().tracks.forEach((track) => {
       if (track.artistId === id) track.artistId = null;
     });
+    getDB().albums.forEach((album) => {
+      if (album.artistId === id) album.artistId = null;
+    });
+
+    const favIndex = getDB().favourites.artists.indexOf(id);
+    if (favIndex !== -1) getDB().favourites.artists.splice(favIndex, 1);
+
     return this.artists.splice(index, 1);
   }
 }

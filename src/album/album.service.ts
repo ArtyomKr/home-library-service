@@ -43,6 +43,10 @@ export class AlbumService {
     getDB().tracks.forEach((track) => {
       if (track.albumId === id) track.albumId = null;
     });
+
+    const favIndex = getDB().favourites.albums.indexOf(id);
+    if (favIndex !== -1) getDB().favourites.albums.splice(favIndex, 1);
+
     return this.albums.splice(index, 1);
   }
 }

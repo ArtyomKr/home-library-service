@@ -41,6 +41,10 @@ export class TrackService {
   remove(id: string) {
     const index = this.tracks.findIndex((track) => track.id === id);
     if (index === -1) throw new BusinessError('Track not found', 404);
+
+    const favIndex = getDB().favourites.tracks.indexOf(id);
+    if (favIndex !== -1) getDB().favourites.tracks.splice(favIndex, 1);
+
     return this.tracks.splice(index, 1);
   }
 }

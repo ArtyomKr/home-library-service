@@ -56,6 +56,6 @@ export class UserService {
   remove(id: string) {
     const index = this.users.findIndex((user) => user.id === id);
     if (index === -1) throw new BusinessError('User not found', 404);
-    return this.users.splice(index, 1);
+    this.users.splice(index, 1);
   }
 }

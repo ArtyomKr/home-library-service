@@ -7,7 +7,10 @@ export class UpdateArtistDto {
   @ValidateIf((object, value) => value !== undefined)
   name?: string;
 
-  @ApiPropertyOptional({ example: true, description: 'does this artist hold grammy award' })
+  @ApiPropertyOptional({
+    example: true,
+    description: 'does this artist hold grammy award',
+  })
   @IsBoolean()
   @ValidateIf((object, value) => value !== undefined)
   grammy?: boolean;

@@ -49,6 +49,6 @@ export class ArtistService {
     const favIndex = getDB().favourites.artists.indexOf(id);
     if (favIndex !== -1) getDB().favourites.artists.splice(favIndex, 1);
 
-    return this.artists.splice(index, 1);
+    this.artists.splice(index, 1);
   }
 }

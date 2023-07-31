@@ -6,7 +6,10 @@ export class CreateArtistDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ example: true, description: 'does this artist hold grammy award' })
+  @ApiProperty({
+    example: true,
+    description: 'does this artist hold grammy award',
+  })
   @IsBoolean()
   grammy: boolean;
 }

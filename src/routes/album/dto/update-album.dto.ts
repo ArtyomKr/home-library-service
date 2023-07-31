@@ -5,7 +5,7 @@ import {
   IsUUID,
   ValidateIf,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateAlbumDto {
   @ApiPropertyOptional({ example: 'Nevermind', description: 'album name' })
@@ -18,7 +18,10 @@ export class UpdateAlbumDto {
   @ValidateIf((object, value) => value !== undefined)
   year?: boolean;
 
-  @ApiPropertyOptional({ example: 'b3a0f0e0-d1c4-452e-89c1-2a99a463f9eb', description: 'UUID of the artist' })
+  @ApiPropertyOptional({
+    example: 'b3a0f0e0-d1c4-452e-89c1-2a99a463f9eb',
+    description: 'UUID of the artist',
+  })
   @IsOptional()
   @IsUUID()
   artistId: string | null;

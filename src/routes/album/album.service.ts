@@ -47,6 +47,6 @@ export class AlbumService {
     const favIndex = getDB().favourites.albums.indexOf(id);
     if (favIndex !== -1) getDB().favourites.albums.splice(favIndex, 1);
 
-    return this.albums.splice(index, 1);
+    this.albums.splice(index, 1);
   }
 }

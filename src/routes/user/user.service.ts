@@ -1,37 +1,42 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { compare } from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { randomUUID } from 'crypto';
 import { BusinessError } from '../../utils/businessError';
-import { getDB } from '../../db';
+import { ISafeUser } from './entities/safe-user.entity';
+import { generateHash } from '../../utils/generateHash';
 
 @Injectable()
 export class UserService {
-  private readonly users: User[] = getDB().users;
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
-  create({ login, password }: CreateUserDto) {
-    const user: User = {
-      id: randomUUID(),
+  async create({ login, password: pass }: CreateUserDto): Promise<ISafeUser> {
+    const user = await this.usersRepository.create({
       login,
-      password,
+      password: await generateHash(pass),
       version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-    this.users.push(user);
+    });
 
-    const safeUser = Object.assign({}, user);
+    const result = await this.usersRepository.save(user);
+    const safeUser = Object.assign({}, result);
     delete safeUser.password;
     return safeUser;
   }
 
-  findAll() {
-    return this.users;
+  async findAll(): Promise<ISafeUser[]> {
+    return await this.usersRepository.find({
+      select: ['id', 'login', 'version', 'createdAt', 'updatedAt'],
+    });
   }
 
-  findOne(id: string) {
-    const user = this.users.find((user) => user.id === id);
+  async findOne(id: string): Promise<ISafeUser> {
+    const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) throw new BusinessError('User not found', 404);
 
     const safeUser = Object.assign({}, user);
@@ -39,23 +44,29 @@ export class UserService {
     return safeUser;
   }
 
-  update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
-    const user = this.users.find((user) => user.id === id);
+  async update(
+    id: string,
+    { oldPassword, newPassword }: UpdatePasswordDto,
+  ): Promise<ISafeUser> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+
     if (!user) throw new BusinessError('User not found', 404);
-    if (user.password !== oldPassword)
+    if (!(await compare(oldPassword, user.password)))
       throw new BusinessError('Password is incorrect', 403);
-    user.password = newPassword;
-    user.updatedAt = Date.now();
+
+    user.password = await generateHash(newPassword);
     user.version++;
+    await this.usersRepository.save(user);
 
     const safeUser = Object.assign({}, user);
     delete safeUser.password;
     return safeUser;
   }
 
-  remove(id: string) {
-    const index = this.users.findIndex((user) => user.id === id);
-    if (index === -1) throw new BusinessError('User not found', 404);
-    this.users.splice(index, 1);
+  async remove(id: string) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+
+    if (!user) throw new BusinessError('User not found', 404);
+    await this.usersRepository.remove(user);
   }
 }

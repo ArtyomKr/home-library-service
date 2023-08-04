@@ -1,4 +1,4 @@
-export class SafeUser {
+export class ISafeUser {
   id: string;
   login: string;
   version: number;

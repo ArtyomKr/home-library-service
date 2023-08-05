@@ -1,52 +1,49 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
-import { randomUUID } from 'crypto';
 import { BusinessError } from '../../utils/businessError';
-import { getDB } from '../../db';
 
 @Injectable()
 export class AlbumService {
-  private readonly albums: Album[] = getDB().albums;
+  constructor(
+    @InjectRepository(Album)
+    private albumRepository: Repository<Album>,
+  ) {}
 
-  create({ name, year, artistId }: CreateAlbumDto) {
-    const album = {
-      id: randomUUID(),
+  async create({ name, year, artistId }: CreateAlbumDto): Promise<Album> {
+    const album = await this.albumRepository.create({
       name,
       year,
       artistId: artistId ?? null,
-    };
-    this.albums.push(album);
-    return album;
-  }
-
-  findAll() {
-    return this.albums;
-  }
-
-  findOne(id: string) {
-    const album = this.albums.find((album) => album.id === id);
-    if (!album) throw new BusinessError('Album not found', 404);
-    return album;
-  }
-
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const album = this.albums.find((album) => album.id === id);
-    if (!album) throw new BusinessError('Album not found', 404);
-    return Object.assign(album, updateAlbumDto);
-  }
-
-  remove(id: string) {
-    const index = this.albums.findIndex((album) => album.id === id);
-    if (index === -1) throw new BusinessError('Album not found', 404);
-    getDB().tracks.forEach((track) => {
-      if (track.albumId === id) track.albumId = null;
     });
+    await this.albumRepository.insert(album);
+    return album;
+  }
 
-    const favIndex = getDB().favourites.albums.indexOf(id);
-    if (favIndex !== -1) getDB().favourites.albums.splice(favIndex, 1);
+  async findAll(): Promise<Album[]> {
+    return await this.albumRepository.find();
+  }
 
-    this.albums.splice(index, 1);
+  async findOne(id: string): Promise<Album> {
+    const album = this.albumRepository.findOne({ where: { id } });
+    if (!album) throw new BusinessError('Album not found', 404);
+    return album;
+  }
+
+  async update(id: string, updateAlbumDto: UpdateAlbumDto): Promise<Album> {
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (!album) throw new BusinessError('Album not found', 404);
+    return await this.albumRepository.save(
+      Object.assign(album, updateAlbumDto),
+    );
+  }
+
+  async remove(id: string) {
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (!album) throw new BusinessError('Album not found', 404);
+    await this.albumRepository.remove(album);
   }
 }

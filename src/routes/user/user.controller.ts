@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,6 +10,7 @@ import {
   Post,
   Put,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -28,6 +30,7 @@ import { ISafeUser } from './entities/safe-user.entity';
 
 @ApiTags('User endpoints')
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

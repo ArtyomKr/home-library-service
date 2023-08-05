@@ -6,7 +6,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { BusinessError } from '../../utils/businessError';
-import { ISafeUser } from './entities/safe-user.entity';
 import { generateHash } from '../../utils/generateHash';
 
 @Injectable()
@@ -16,38 +15,31 @@ export class UserService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create({ login, password: pass }: CreateUserDto): Promise<ISafeUser> {
+  async create({ login, password: pass }: CreateUserDto): Promise<User> {
     const user = await this.usersRepository.create({
       login,
       password: await generateHash(pass),
       version: 1,
     });
 
-    const result = await this.usersRepository.save(user);
-    const safeUser = Object.assign({}, result);
-    delete safeUser.password;
-    return safeUser;
+    return await this.usersRepository.save(user);
   }
 
-  async findAll(): Promise<ISafeUser[]> {
-    return await this.usersRepository.find({
-      select: ['id', 'login', 'version', 'createdAt', 'updatedAt'],
-    });
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
 
-  async findOne(id: string): Promise<ISafeUser> {
+  async findOne(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) throw new BusinessError('User not found', 404);
 
-    const safeUser = Object.assign({}, user);
-    delete safeUser.password;
-    return safeUser;
+    return user;
   }
 
   async update(
     id: string,
     { oldPassword, newPassword }: UpdatePasswordDto,
-  ): Promise<ISafeUser> {
+  ): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
 
     if (!user) throw new BusinessError('User not found', 404);
@@ -58,9 +50,7 @@ export class UserService {
     user.version++;
     await this.usersRepository.save(user);
 
-    const safeUser = Object.assign({}, user);
-    delete safeUser.password;
-    return safeUser;
+    return user;
   }
 
   async remove(id: string) {

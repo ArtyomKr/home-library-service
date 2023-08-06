@@ -13,9 +13,7 @@ import {
 import {
   ApiTags,
   ApiOperation,
-  ApiCreatedResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
@@ -23,7 +21,6 @@ import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
-import { Album } from './entities/album.entity';
 
 @ApiTags('Album endpoints')
 @Controller('album')
@@ -34,10 +31,6 @@ export class AlbumController {
   @ApiOperation({
     summary: 'Create album',
     description: 'Create new album',
-  })
-  @ApiCreatedResponse({
-    description: 'The record has been successfully created',
-    type: Album,
   })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -75,10 +68,6 @@ export class AlbumController {
     description: 'Change album with specified id',
   })
   @UseFilters(BusinessErrorFilter)
-  @ApiOkResponse({
-    description: 'The record has been successfully updated',
-    type: Album,
-  })
   @ApiNotFoundResponse({ description: 'Album not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',

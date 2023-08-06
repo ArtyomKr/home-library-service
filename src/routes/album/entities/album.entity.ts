@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Artist } from '../../artist/entities/artist.entity';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Album {
@@ -15,6 +16,7 @@ export class Album {
   @Column({ nullable: true })
   artistId: string | null;
 
+  @ApiHideProperty()
   @ManyToOne(() => Artist, { onDelete: 'SET NULL' })
   artist: Artist;
 }

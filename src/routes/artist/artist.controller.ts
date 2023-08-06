@@ -13,9 +13,7 @@ import {
 import {
   ApiTags,
   ApiOperation,
-  ApiCreatedResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
@@ -23,7 +21,6 @@ import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
-import { Artist } from './entities/artist.entity';
 
 @ApiTags('Artist endpoints')
 @Controller('artist')
@@ -34,10 +31,6 @@ export class ArtistController {
   @ApiOperation({
     summary: 'Create artist',
     description: 'Create new artist',
-  })
-  @ApiCreatedResponse({
-    description: 'The record has been successfully created',
-    type: Artist,
   })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -75,10 +68,6 @@ export class ArtistController {
     description: 'Change artist with specified id',
   })
   @UseFilters(BusinessErrorFilter)
-  @ApiOkResponse({
-    description: 'The record has been successfully updated',
-    type: Artist,
-  })
   @ApiNotFoundResponse({ description: 'Artist not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',

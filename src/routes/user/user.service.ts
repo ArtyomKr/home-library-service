@@ -21,7 +21,6 @@ export class UserService {
       password: await generateHash(pass),
       version: 1,
     });
-
     return await this.usersRepository.save(user);
   }
 
@@ -32,7 +31,6 @@ export class UserService {
   async findOne(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) throw new BusinessError('User not found', 404);
-
     return user;
   }
 
@@ -49,13 +47,11 @@ export class UserService {
     user.password = await generateHash(newPassword);
     user.version++;
     await this.usersRepository.save(user);
-
     return user;
   }
 
   async remove(id: string) {
     const user = await this.usersRepository.findOne({ where: { id } });
-
     if (!user) throw new BusinessError('User not found', 404);
     await this.usersRepository.remove(user);
   }

@@ -28,7 +28,7 @@ export class AlbumService {
   }
 
   async findOne(id: string): Promise<Album> {
-    const album = this.albumRepository.findOne({ where: { id } });
+    const album = await this.albumRepository.findOne({ where: { id } });
     if (!album) throw new BusinessError('Album not found', 404);
     return album;
   }

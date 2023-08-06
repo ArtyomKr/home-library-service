@@ -1,50 +1,55 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
-import { randomUUID } from 'crypto';
 import { BusinessError } from '../../utils/businessError';
-import { getDB } from '../../db';
 
 @Injectable()
 export class TrackService {
-  private readonly tracks: Track[] = getDB().tracks;
+  constructor(
+    @InjectRepository(Track)
+    private trackRepository: Repository<Track>,
+  ) {}
 
-  create({ name, duration, artistId, albumId }: CreateTrackDto) {
-    const track = {
-      id: randomUUID(),
+  async create({
+    name,
+    duration,
+    artistId,
+    albumId,
+  }: CreateTrackDto): Promise<Track> {
+    const track = await this.trackRepository.create({
       name,
       duration,
       artistId: artistId ?? null,
       albumId: albumId ?? null,
-    };
-    this.tracks.push(track);
+    });
+    await this.trackRepository.insert(track);
     return track;
   }
 
-  findAll() {
-    return this.tracks;
+  async findAll(): Promise<Track[]> {
+    return await this.trackRepository.find();
   }
 
-  findOne(id: string) {
-    const track = this.tracks.find((track) => track.id === id);
+  async findOne(id: string): Promise<Track> {
+    const track = await this.trackRepository.findOne({ where: { id } });
     if (!track) throw new BusinessError('Track not found', 404);
     return track;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
-    const track = this.tracks.find((track) => track.id === id);
+  async update(id: string, updateTrackDto: UpdateTrackDto): Promise<Track> {
+    const track = await this.trackRepository.findOne({ where: { id } });
     if (!track) throw new BusinessError('Track not found', 404);
-    return Object.assign(track, updateTrackDto);
+    return await this.trackRepository.save(
+      Object.assign(track, updateTrackDto),
+    );
   }
 
-  remove(id: string) {
-    const index = this.tracks.findIndex((track) => track.id === id);
-    if (index === -1) throw new BusinessError('Track not found', 404);
-
-    const favIndex = getDB().favourites.tracks.indexOf(id);
-    if (favIndex !== -1) getDB().favourites.tracks.splice(favIndex, 1);
-
-    this.tracks.splice(index, 1);
+  async remove(id: string) {
+    const track = await this.trackRepository.findOne({ where: { id } });
+    if (!track) throw new BusinessError('Track not found', 404);
+    await this.trackRepository.remove(track);
   }
 }

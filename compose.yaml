@@ -1,56 +1,48 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker compose reference guide at
-# https://docs.docker.com/compose/compose-file/
-
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
+name: home-lib-service
 services:
   server:
+    container_name: web-server
     build:
       context: .
       dockerfile: Dockerfile
       args:
         - PORT=$PORT
     command: npm run start:dev
+    restart: on-failure
     volumes:
       - ./src:/usr/app/src
-    restart: on-failure
+    environment:
+      - DB_HOST=db
     ports:
-      - ${PORT}:${PORT}
-
-# The commented out section below is an example of how to define a PostgreSQL
-# database that your application can use. `depends_on` tells Docker Compose to
-# start the database before your application. The `db-data` volume persists the
-# database data between container restarts. The `db-password` secret is used
-# to set the database password. You must create `db/password.txt` and add
-# a password of your choosing to it before running `docker-compose up`.
-#     depends_on:
-#       db:
-#         condition: service_healthy
-#   db:
-#     image: postgres
-#     restart: always
-#     user: postgres
-#     secrets:
-#       - db-password
-#     volumes:
-#       - db-data:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=example
-#       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-#     expose:
-#       - 5432
-#     healthcheck:
-#       test: [ "CMD", "pg_isready" ]
-#       interval: 10s
-#       timeout: 5s
-#       retries: 5
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
-
+      - $PORT:$PORT
+    depends_on:
+       db:
+         condition: service_healthy
+    networks:
+      - home-lib-network
+  db:
+    container_name: db
+    image: postgres:15.3-alpine
+    command: postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/var/lib/postgresql/data/logs
+    restart: always
+    user: $POSTGRES_USER
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    ports:
+      - $DB_PORT:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - home-lib-network
+volumes:
+  db-data:
+    driver: local
+networks:
+  home-lib-network:
+    driver: bridge

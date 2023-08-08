@@ -1,11 +1,5 @@
 FROM node:18.16-alpine
 
-ARG PORT
-
-ENV PORT=$PORT
-
-EXPOSE ${PORT}
-
 STOPSIGNAL SIGINT
 
 WORKDIR /usr/app

@@ -1,6 +1,6 @@
 name: home-lib-service
 services:
-  server:
+  web-server:
     container_name: web-server
     build:
       context: .
@@ -22,19 +22,21 @@ services:
       - home-lib-network
   db:
     container_name: db
-    image: postgres:15.3-alpine
-    command: postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/var/lib/postgresql/data/logs
+    build:
+      context: /postgres
+      dockerfile: DockerfilePostgres
     restart: always
     user: $POSTGRES_USER
     volumes:
       - db-data:/var/lib/postgresql/data
+      - db-logs:/var/lib/postgresql/logs
     environment:
       - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
     ports:
       - $DB_PORT:5432
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -42,6 +44,8 @@ services:
       - home-lib-network
 volumes:
   db-data:
+    driver: local
+  db-logs:
     driver: local
 networks:
   home-lib-network:

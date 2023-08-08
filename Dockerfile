@@ -6,6 +6,8 @@ ENV PORT=$PORT
 
 EXPOSE ${PORT}
 
+STOPSIGNAL SIGINT
+
 WORKDIR /usr/app
 
 RUN chown node:node /usr/app

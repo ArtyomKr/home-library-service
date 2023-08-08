@@ -21,7 +21,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typeorm": "typeorm-ts-node-esm",
     "migration:generate": "typeorm-ts-node-esm -d src/typeorm.config.ts migration:generate ./migrations/CreateTables",
-    "migration:run": "typeorm-ts-node-esm -d src/typeorm.config.ts migration:run"
+    "migration:run": "typeorm-ts-node-esm -d src/typeorm.config.ts migration:run",
+    "scout:scan": "docker scout cves home-lib-service-web-server"
   },
   "dependencies": {
     "@nestjs/cli": "^10.1.11",

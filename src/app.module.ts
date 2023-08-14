@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,9 +8,12 @@ import { ArtistModule } from './routes/artist/artist.module';
 import { AlbumModule } from './routes/album/album.module';
 import { FavouritesModule } from './routes/favourites/favourites.module';
 import { connectionOptions } from './typeorm.config';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerMiddleware } from './logger/logger.middleware';
 
 @Module({
   imports: [
+    LoggerModule,
     UserModule,
     TrackModule,
     ArtistModule,
@@ -21,4 +24,8 @@ import { connectionOptions } from './typeorm.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('');
+  }
+}

@@ -6,13 +6,15 @@ import { LoggingService } from './logger.service';
 export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new LoggingService();
   use(req: Request, res: Response, next: NextFunction) {
-    const { method, path: url, body, query } = req;
-    this.logger.debug(
-      `METHOD:${method} 
-       URL:${url} 
-       PARAMS:${JSON.stringify(query)} 
-       BODY:${JSON.stringify(body)}`,
-    );
+    this.logger.logReq(req);
+
+    const send = res.send;
+    res.send = (body) => {
+      this.logger.logRes({ statusCode: res.statusCode, body });
+      res.send = send;
+      return res.send(body);
+    };
+
     next();
   }
 }

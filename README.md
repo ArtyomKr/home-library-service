@@ -6,6 +6,15 @@
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 - Docker - [Download & Install Docker](https://docs.docker.com/engine/install/) install Docker.
 
+## 🚨Before downloading🚨
+One of my reviewers experienced the following [issue](https://stackoverflow.com/questions/51113531/docker-compose-no-such-file-or-directory-for-sh-command)
+This may make **building postgres DB impossible**. To prevent this please run:
+
+```
+git config --global core.autocrlf false
+```
+**before** cloning the repo.
+
 ## Downloading
 
 ```

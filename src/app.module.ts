@@ -12,10 +12,12 @@ import { connectionOptions } from './typeorm.config';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { GlobalFilter } from './utils/global.filter';
+import { AuthModule } from './routes/auth/auth.module';
 
 @Module({
   imports: [
     LoggerModule,
+    AuthModule,
     UserModule,
     TrackModule,
     ArtistModule,

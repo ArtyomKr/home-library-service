@@ -1,8 +1,12 @@
 export class BusinessError extends Error {
-  status: number;
-
-  constructor(message: string, status: number) {
+  constructor(
+    message: string,
+    private readonly status: number,
+  ) {
     super(message);
-    this.status = status;
+  }
+
+  getStatus() {
+    return this.status;
   }
 }

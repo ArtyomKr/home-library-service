@@ -30,6 +30,7 @@ import { ISafeUser } from './entities/safe-user.entity';
 
 @ApiTags('User endpoints')
 @Controller('user')
+@UseFilters(BusinessErrorFilter)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -59,7 +60,6 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user' })
-  @UseFilters(BusinessErrorFilter)
   @ApiOkResponse({
     description: 'The record has been successfully found',
     type: ISafeUser,
@@ -74,7 +74,6 @@ export class UserController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Change user' })
-  @UseFilters(BusinessErrorFilter)
   @ApiOkResponse({
     description: 'The record has been successfully updated',
     type: ISafeUser,
@@ -94,7 +93,6 @@ export class UserController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user' })
   @HttpCode(204)
-  @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiBadRequestResponse({

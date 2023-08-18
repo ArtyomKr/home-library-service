@@ -24,6 +24,7 @@ import { Favourites } from './entities/favourites.entity';
 
 @ApiTags('Favourites endpoints')
 @Controller('favs')
+@UseFilters(BusinessErrorFilter)
 export class FavouritesController {
   constructor(private readonly favouritesService: FavouritesService) {}
 
@@ -45,7 +46,6 @@ export class FavouritesController {
     summary: 'Create favourite track',
     description: 'Create favourite track',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiCreatedResponse({
     description: 'The record has been successfully created',
   })
@@ -62,7 +62,6 @@ export class FavouritesController {
     summary: 'Create favourite artist',
     description: 'Create favourite artist',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiCreatedResponse({
     description: 'The record has been successfully created',
   })
@@ -79,7 +78,6 @@ export class FavouritesController {
     summary: 'Create favourite album',
     description: 'Create favourite album',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiCreatedResponse({
     description: 'The record has been successfully created',
   })
@@ -97,7 +95,6 @@ export class FavouritesController {
     description: 'Delete track from favourites',
   })
   @HttpCode(204)
-  @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })
   @ApiNotFoundResponse({ description: 'Track not found' })
   @ApiBadRequestResponse({
@@ -113,7 +110,6 @@ export class FavouritesController {
     description: 'Delete artist from favourites',
   })
   @HttpCode(204)
-  @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })
   @ApiNotFoundResponse({ description: 'Artist not found' })
   @ApiBadRequestResponse({
@@ -129,7 +125,6 @@ export class FavouritesController {
     description: 'Delete album from favourites',
   })
   @HttpCode(204)
-  @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })
   @ApiNotFoundResponse({ description: 'Album not found' })
   @ApiBadRequestResponse({

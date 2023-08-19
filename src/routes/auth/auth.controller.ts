@@ -7,19 +7,23 @@ import {
   HttpCode,
   UseFilters,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { UserService } from '../user/user.service';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { UserService } from '../user/user.service';
 import { ISafeUser } from '../user/entities/safe-user.entity';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
+import { LoginDto } from './dto/login.dto';
+import { RefreshDto } from './dto/refresh.dto';
+import { Public } from '../../utils/isPublic.metadata';
 
+@Public()
 @ApiTags('Auth endpoints')
 @Controller('auth')
 @UseFilters(BusinessErrorFilter)
@@ -54,5 +58,18 @@ export class AuthController {
   })
   login(@Body() LoginDto: LoginDto) {
     return this.authService.login(LoginDto);
+  }
+
+  @Post('/refresh')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Refresh token' })
+  @ApiForbiddenResponse({
+    description: 'Token is invalid or expired',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  refresh(@Body() RefreshDto: RefreshDto) {
+    return this.authService.refresh(RefreshDto);
   }
 }

@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,6 +13,7 @@ import { LoggerModule } from './logger/logger.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { GlobalFilter } from './utils/global.filter';
 import { AuthModule } from './routes/auth/auth.module';
+import { AuthGuard } from './routes/auth/auth.guard';
 
 @Module({
   imports: [
@@ -31,6 +32,10 @@ import { AuthModule } from './routes/auth/auth.module';
     {
       provide: APP_FILTER,
       useClass: GlobalFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })

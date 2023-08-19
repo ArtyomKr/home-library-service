@@ -26,7 +26,7 @@ export class AuthService {
         403,
       );
     return {
-      token: await this.jwtService.signAsync({ userId: user.id, login }),
+      accessToken: await this.jwtService.signAsync({ userId: user.id, login }),
       refreshToken: await this.jwtService.signAsync(
         { userId: user.id, login },
         { secret: refreshSecret, expiresIn: refreshTokenExpiration },
@@ -42,7 +42,7 @@ export class AuthService {
       });
       console.log(decoded);
       return {
-        token: await this.jwtService.signAsync({
+        accessToken: await this.jwtService.signAsync({
           userId: decoded.userId,
           login: decoded.login,
         }),

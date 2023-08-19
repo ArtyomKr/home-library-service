@@ -19,6 +19,7 @@ async function bootstrap() {
     .setDescription('Home music library service')
     .setVersion('1.0')
     .addTag('nestjs')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);

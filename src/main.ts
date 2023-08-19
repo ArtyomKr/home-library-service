@@ -29,4 +29,15 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`Server is running on https: http://localhost:${port}/`);
 }
+
 bootstrap();
+
+process
+  .on('unhandledRejection', (reason, promise) => {
+    const logger = new LoggingService();
+    logger.error(reason, 'Unhandled Rejection at Promise', promise);
+  })
+  .on('uncaughtException', (err) => {
+    const logger = new LoggingService();
+    logger.error(err, 'Uncaught Exception');
+  });

@@ -5,7 +5,6 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import * as process from 'process';
 import { Request, Response } from 'express';
 import { LoggingService } from '../logger/logger.service';
 
@@ -33,14 +32,3 @@ export class GlobalFilter implements ExceptionFilter {
     });
   }
 }
-
-process
-  .on('unhandledRejection', (reason, promise) => {
-    const logger = new LoggingService();
-    logger.error(reason, 'Unhandled Rejection at Promise', promise);
-  })
-  .on('uncaughtExceptionMonitor', (err) => {
-    const logger = new LoggingService();
-    logger.error(err, 'Uncaught Exception');
-    process.exit(1);
-  });

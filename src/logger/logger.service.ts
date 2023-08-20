@@ -82,15 +82,11 @@ export class LoggingService extends ConsoleLogger {
     const log = `>>>>>>>>>>> ${new Date().toISOString()}     [REQ] METHOD:${method} URL:${url} PARAMS:${JSON.stringify(
       query,
     )} BODY:${JSON.stringify(body)}`;
-
-    process.stdout.write(`\x1b[34m${log}\x1b[0m\n`);
-    this.writeLog({ error: false }, log);
+    this.verbose(`\x1b[34m${log}\x1b[0m`);
   }
 
   logRes({ statusCode, body }: { statusCode: number; body: object }) {
     const log = `<<<<<<<<<<< ${new Date().toISOString()}     [RESP] STATUS:${statusCode} BODY:${body}`;
-
-    process.stdout.write(`\x1b[36m${log}\x1b[0m\n`);
-    this.writeLog({ error: false }, log);
+    this.verbose(`\x1b[36m${log}\x1b[0m`);
   }
 }

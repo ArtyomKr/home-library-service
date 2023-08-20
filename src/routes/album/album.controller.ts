@@ -16,15 +16,17 @@ import {
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
-@ApiTags('Album endpoints')
 @Controller('album')
 @UseFilters(BusinessErrorFilter)
+@ApiTags('Album endpoints')
+@ApiBearerAuth('access-token')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 

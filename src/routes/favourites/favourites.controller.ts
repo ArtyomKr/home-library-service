@@ -17,14 +17,16 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { FavouritesService } from './favourites.service';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 import { Favourites } from './entities/favourites.entity';
 
-@ApiTags('Favourites endpoints')
 @Controller('favs')
 @UseFilters(BusinessErrorFilter)
+@ApiTags('Favourites endpoints')
+@ApiBearerAuth('access-token')
 export class FavouritesController {
   constructor(private readonly favouritesService: FavouritesService) {}
 

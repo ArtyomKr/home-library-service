@@ -16,15 +16,17 @@ import {
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
-@ApiTags('Track endpoints')
 @Controller('track')
 @UseFilters(BusinessErrorFilter)
+@ApiTags('Track endpoints')
+@ApiBearerAuth('access-token')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 

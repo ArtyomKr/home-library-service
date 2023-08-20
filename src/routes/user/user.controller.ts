@@ -21,6 +21,7 @@ import {
   ApiNoContentResponse,
   ApiBadRequestResponse,
   ApiForbiddenResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,10 +29,11 @@ import { UpdatePasswordDto } from './dto/update-user.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 import { ISafeUser } from './entities/safe-user.entity';
 
-@ApiTags('User endpoints')
 @Controller('user')
 @UseFilters(BusinessErrorFilter)
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('User endpoints')
+@ApiBearerAuth('access-token')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

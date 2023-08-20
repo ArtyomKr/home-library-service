@@ -16,15 +16,17 @@ import {
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
-@ApiTags('Artist endpoints')
 @Controller('artist')
 @UseFilters(BusinessErrorFilter)
+@ApiTags('Artist endpoints')
+@ApiBearerAuth('access-token')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 

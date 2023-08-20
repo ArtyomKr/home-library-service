@@ -40,7 +40,6 @@ export class AuthService {
       const decoded = await this.jwtService.verifyAsync(refreshToken, {
         secret: refreshSecret,
       });
-      console.log(decoded);
       return {
         accessToken: await this.jwtService.signAsync({
           userId: decoded.userId,

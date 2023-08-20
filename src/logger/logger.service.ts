@@ -14,7 +14,7 @@ export class LoggingService extends ConsoleLogger {
   private readonly loglevel = +process.env.LOG_LEVEL ?? 0;
 
   writeLog({ error }: { error: boolean }, ...args) {
-    const LOG_FOLDER = join(__dirname, '../../logs');
+    const LOG_FOLDER = join(__dirname, '../../../logs');
 
     if (!existsSync(LOG_FOLDER)) {
       mkdirSync(LOG_FOLDER);

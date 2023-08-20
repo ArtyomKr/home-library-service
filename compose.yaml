@@ -9,6 +9,7 @@ services:
     restart: on-failure
     volumes:
       - ./src:/usr/app/src
+      - server-logs:/usr/app/logs
     environment:
       - PG_HOST=$PG_HOST
       - PORT=$PORT
@@ -51,6 +52,8 @@ services:
           - $PG_HOST
 volumes:
   db-data:
+    driver: local
+  server-logs:
     driver: local
 networks:
   home-lib-network:

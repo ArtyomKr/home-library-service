@@ -1,0 +1,805 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+  /user:
+    post:
+      operationId: UserController_create
+      summary: Create user
+      description: Create new user
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: The record has been successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SafeUser'
+        '400':
+          description: Bad request, body does not contain required fields
+      tags: &ref_0
+        - User endpoints
+    get:
+      operationId: UserController_findAll
+      summary: Get users
+      description: Get all users
+      parameters: []
+      responses:
+        '200':
+          description: The records have been successfully found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SafeUser'
+      tags: *ref_0
+  /user/{id}:
+    get:
+      operationId: UserController_findOne
+      summary: Get user
+      description: Get user by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The record has been successfully found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SafeUser'
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: User not found
+      tags: *ref_0
+    put:
+      operationId: UserController_update
+      summary: Change user
+      description: Change user with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePasswordDto'
+      responses:
+        '200':
+          description: The record has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SafeUser'
+        '400':
+          description: Bad request, body does not contain required fields
+        '403':
+          description: Old password is incorrect
+        '404':
+          description: User not found
+      tags: *ref_0
+    delete:
+      operationId: UserController_remove
+      summary: Delete user
+      description: Delete user with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Record was deleted
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: User not found
+      tags: *ref_0
+  /track:
+    post:
+      operationId: TrackController_create
+      summary: Create track
+      description: Create new track
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTrackDto'
+      responses:
+        '201':
+          description: The record has been successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Track'
+        '400':
+          description: Bad request. body does not contain required fields
+      tags: &ref_1
+        - Track endpoints
+    get:
+      operationId: TrackController_findAll
+      summary: Get tracks
+      description: Get all tracks
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Track'
+      tags: *ref_1
+  /track/{id}:
+    get:
+      operationId: TrackController_findOne
+      summary: Get track
+      description: Get track by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Track'
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Track not found
+      tags: *ref_1
+    put:
+      operationId: TrackController_update
+      summary: Change track
+      description: Change track with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTrackDto'
+      responses:
+        '200':
+          description: The record has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Track'
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Track not found
+      tags: *ref_1
+    delete:
+      operationId: TrackController_remove
+      summary: Delete track
+      description: Delete track with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Record was deleted
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Track not found
+      tags: *ref_1
+  /artist:
+    post:
+      operationId: ArtistController_create
+      summary: Create artist
+      description: Create new artist
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArtistDto'
+      responses:
+        '201':
+          description: The record has been successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '400':
+          description: Bad request, body does not contain required fields
+      tags: &ref_2
+        - Artist endpoints
+    get:
+      operationId: ArtistController_findAll
+      summary: Get artists
+      description: Get all artists
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artist'
+      tags: *ref_2
+  /artist/{id}:
+    get:
+      operationId: ArtistController_findOne
+      summary: Get artist
+      description: Get artist by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Artist not found
+      tags: *ref_2
+    put:
+      operationId: ArtistController_update
+      summary: Change artist
+      description: Change artist with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateArtistDto'
+      responses:
+        '200':
+          description: The record has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Artist not found
+      tags: *ref_2
+    delete:
+      operationId: ArtistController_remove
+      summary: Delete artist
+      description: Delete artist with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Record was deleted
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Artist not found
+      tags: *ref_2
+  /album:
+    post:
+      operationId: AlbumController_create
+      summary: Create album
+      description: Create new album
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlbumDto'
+      responses:
+        '201':
+          description: The record has been successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: Bad request, body does not contain required fields
+      tags: &ref_3
+        - Album endpoints
+    get:
+      operationId: AlbumController_findAll
+      summary: Get albums
+      description: Get all albums
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Album'
+      tags: *ref_3
+  /album/{id}:
+    get:
+      operationId: AlbumController_findOne
+      summary: Get album
+      description: Get album by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Album not found
+      tags: *ref_3
+    put:
+      operationId: AlbumController_update
+      summary: Change album
+      description: Change album with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAlbumDto'
+      responses:
+        '200':
+          description: The record has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Album not found
+      tags: *ref_3
+    delete:
+      operationId: AlbumController_remove
+      summary: Delete album
+      description: Delete album with specified id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Record was deleted
+        '400':
+          description: Bad request, body does not contain required fields
+        '404':
+          description: Album not found
+      tags: *ref_3
+  /favs:
+    get:
+      operationId: FavouritesController_findAll
+      summary: Get favourites
+      description: Get all favourites
+      parameters: []
+      responses:
+        '200':
+          description: The records have been successfully found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Favourites'
+      tags: &ref_4
+        - Favourites endpoints
+  /favs/track/{id}:
+    post:
+      operationId: FavouritesController_addTrack
+      summary: Create favourite track
+      description: Create favourite track
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The record has been successfully created
+        '400':
+          description: Bad request. body does not contain required fields
+        '422':
+          description: Track not found
+      tags: *ref_4
+    delete:
+      operationId: FavouritesController_deleteTrack
+      summary: Delete track from favourites
+      description: Delete track from favourites
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Record was deleted
+        '400':
+          description: Bad request. body does not contain required fields
+        '404':
+          description: Track not found
+      tags: *ref_4
+  /favs/artist/{id}:
+    post:
+      operationId: FavouritesController_addArtist
+      summary: Create favourite artist
+      description: Create favourite artist
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The record has been successfully created
+        '400':
+          description: Bad request. body does not contain required fields
+        '422':
+          description: Artist not found
+      tags: *ref_4
+    delete:
+      operationId: FavouritesController_deleteArtist
+      summary: Delete artist from favourites
+      description: Delete artist from favourites
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Record was deleted
+        '400':
+          description: Bad request. body does not contain required fields
+        '404':
+          description: Artist not found
+      tags: *ref_4
+  /favs/album/{id}:
+    post:
+      operationId: FavouritesController_addAlbum
+      summary: Create favourite album
+      description: Create favourite album
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The record has been successfully created
+        '400':
+          description: Bad request. body does not contain required fields
+        '422':
+          description: Album not found
+      tags: *ref_4
+    delete:
+      operationId: FavouritesController_deleteAlbum
+      summary: Delete album from favourites
+      description: Delete album from favourites
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Record was deleted
+        '400':
+          description: Bad request. body does not contain required fields
+        '404':
+          description: Album not found
+      tags: *ref_4
+info:
+  title: Home Library Service
+  description: Home music library service
+  version: '1.0'
+  contact: {}
+tags:
+  - name: nestjs
+    description: ''
+servers: []
+components:
+  schemas:
+    CreateUserDto:
+      type: object
+      properties:
+        login:
+          type: string
+          example: LoginExample
+          description: user login
+        password:
+          type: string
+          example: pass12345
+          description: user password
+      required:
+        - login
+        - password
+    SafeUser:
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          type: string
+        version:
+          type: number
+        createdAt:
+          type: number
+        updatedAt:
+          type: number
+      required:
+        - id
+        - login
+        - version
+        - createdAt
+        - updatedAt
+    UpdatePasswordDto:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          example: pass12345
+          description: old user password
+        newPassword:
+          type: string
+          example: newPass123
+          description: new user password
+      required:
+        - oldPassword
+        - newPassword
+    CreateTrackDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Never Gonna Give You Up
+          description: track title
+        artistId:
+          type: string
+          nullable: true
+          example: b2a0f0e0-d1c4-452e-85c1-2a99a463f4eb
+          description: UUID of the artist
+        albumId:
+          type: string
+          nullable: true
+          example: b2a0f0e0-d1c4-452e-85c1-2a99a463f4eb
+          description: UUID of the album
+        duration:
+          type: number
+          example: 180
+          description: track duration
+      required:
+        - name
+        - duration
+    Track:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        artistId:
+          type: string
+          nullable: true
+        albumId:
+          type: string
+          nullable: true
+        duration:
+          type: number
+      required:
+        - id
+        - name
+        - artistId
+        - albumId
+        - duration
+    UpdateTrackDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Take Me to Your Heart
+          description: Track title
+        artistId:
+          type: string
+          nullable: true
+          example: b2a0f0e0-d1c4-452e-85c1-2a99a463f4eb
+          description: UUID of the artist
+        albumId:
+          type: string
+          nullable: true
+          example: b2a0f0e0-d1c4-452e-85c1-2a99a463f4eb
+          description: UUID of the album
+        duration:
+          type: number
+          example: 190
+          description: track duration
+      required:
+        - name
+        - duration
+    CreateArtistDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Rick Astley
+          description: artist name
+        grammy:
+          type: boolean
+          example: true
+          description: does this artist hold grammy award
+      required:
+        - name
+        - grammy
+    Artist:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        grammy:
+          type: boolean
+      required:
+        - id
+        - name
+        - grammy
+    UpdateArtistDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Kurt Cobain
+          description: artist name
+        grammy:
+          type: boolean
+          example: true
+          description: does this artist hold grammy award
+    CreateAlbumDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Whenever You Need Somebody
+          description: album name
+        year:
+          type: number
+          example: 1987
+          description: album year
+        artistId:
+          type: string
+          nullable: true
+          example: b2a0f0e0-d1c4-452e-85c1-2a99a463f4eb
+          description: UUID of the artist
+      required:
+        - name
+        - year
+    Album:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        year:
+          type: number
+        artistId:
+          type: string
+          nullable: true
+      required:
+        - id
+        - name
+        - year
+        - artistId
+    UpdateAlbumDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Nevermind
+          description: album name
+        year:
+          type: boolean
+          example: 1991
+          description: album year
+        artistId:
+          type: string
+          nullable: true
+          example: b3a0f0e0-d1c4-452e-89c1-2a99a463f9eb
+          description: UUID of the artist
+    Favourites:
+      type: object
+      properties:
+        artists:
+          type: array
+          items:
+            type: string
+        albums:
+          type: array
+          items:
+            type: string
+        tracks:
+          type: array
+          items:
+            type: string
+      required:
+        - artists
+        - albums
+        - tracks

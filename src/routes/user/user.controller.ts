@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,6 +10,7 @@ import {
   Post,
   Put,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -24,21 +26,19 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
-import { SafeUser } from './entities/safe-user.entity';
+import { ISafeUser } from './entities/safe-user.entity';
 
 @ApiTags('User endpoints')
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @ApiOperation({
-    summary: 'Create user',
-    description: 'Create new user',
-  })
+  @ApiOperation({ summary: 'Create user' })
   @ApiCreatedResponse({
     description: 'The record has been successfully created',
-    type: SafeUser,
+    type: ISafeUser,
   })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -48,27 +48,21 @@ export class UserController {
   }
 
   @Get()
-  @ApiOperation({
-    summary: 'Get users',
-    description: 'Get all users',
-  })
+  @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({
     description: 'The records have been successfully found',
-    type: [SafeUser],
+    type: [ISafeUser],
   })
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({
-    summary: 'Get user',
-    description: 'Get user by id',
-  })
+  @ApiOperation({ summary: 'Get user' })
   @UseFilters(BusinessErrorFilter)
   @ApiOkResponse({
     description: 'The record has been successfully found',
-    type: SafeUser,
+    type: ISafeUser,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiBadRequestResponse({
@@ -79,14 +73,11 @@ export class UserController {
   }
 
   @Put(':id')
-  @ApiOperation({
-    summary: 'Change user',
-    description: 'Change user with specified id',
-  })
+  @ApiOperation({ summary: 'Change user' })
   @UseFilters(BusinessErrorFilter)
   @ApiOkResponse({
     description: 'The record has been successfully updated',
-    type: SafeUser,
+    type: ISafeUser,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiForbiddenResponse({ description: 'Old password is incorrect' })
@@ -101,10 +92,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @ApiOperation({
-    summary: 'Delete user',
-    description: 'Delete user with specified id',
-  })
+  @ApiOperation({ summary: 'Delete user' })
   @HttpCode(204)
   @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })

@@ -13,17 +13,14 @@ import {
 import {
   ApiTags,
   ApiOperation,
-  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiNoContentResponse,
-  ApiOkResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
-import { Track } from './entities/track.entity';
 
 @ApiTags('Track endpoints')
 @Controller('track')
@@ -34,10 +31,6 @@ export class TrackController {
   @ApiOperation({
     summary: 'Create track',
     description: 'Create new track',
-  })
-  @ApiCreatedResponse({
-    description: 'The record has been successfully created',
-    type: Track,
   })
   @ApiBadRequestResponse({
     description: 'Bad request. body does not contain required fields',
@@ -75,10 +68,6 @@ export class TrackController {
     description: 'Change track with specified id',
   })
   @UseFilters(BusinessErrorFilter)
-  @ApiOkResponse({
-    description: 'The record has been successfully updated',
-    type: Track,
-  })
   @ApiNotFoundResponse({ description: 'Track not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',

@@ -1,63 +1,88 @@
 import { Injectable } from '@nestjs/common';
-import { Favourites } from './entities/favourites.entity';
-import { getDB } from '../../db';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import {
+  FavAlbums,
+  FavArtists,
+  Favourites,
+  FavTracks,
+} from './entities/favourites.entity';
 import { BusinessError } from '../../utils/businessError';
+import { Artist } from '../artist/entities/artist.entity';
+import { Album } from '../album/entities/album.entity';
+import { Track } from '../track/entities/track.entity';
 
 @Injectable()
 export class FavouritesService {
-  private readonly favourites: Favourites = getDB().favourites;
+  constructor(
+    @InjectRepository(FavArtists)
+    private favArtistsRepository: Repository<FavArtists>,
+    @InjectRepository(FavAlbums)
+    private favAlbumsRepository: Repository<FavAlbums>,
+    @InjectRepository(FavTracks)
+    private favTracksRepository: Repository<FavTracks>,
+    @InjectRepository(Artist)
+    private artistRepository: Repository<Artist>,
+    @InjectRepository(Album)
+    private albumRepository: Repository<Album>,
+    @InjectRepository(Track)
+    private trackRepository: Repository<Track>,
+  ) {}
 
-  findAll() {
-    const artists = this.favourites.artists.map((id) =>
-      getDB().artists.find((artist) => artist.id === id),
-    );
-    const albums = this.favourites.albums.map((id) =>
-      getDB().albums.find((albums) => albums.id === id),
-    );
-    const tracks = this.favourites.tracks.map((id) =>
-      getDB().tracks.find((track) => track.id === id),
-    );
+  async findAll(): Promise<Favourites> {
+    const artists = await this.favArtistsRepository.find();
+    const tracks = await this.favTracksRepository.find();
+    const albums = await this.favAlbumsRepository.find();
 
     return {
-      artists,
-      albums,
-      tracks,
+      artists: artists.map(({ artist }) => artist),
+      tracks: tracks.map(({ track }) => track),
+      albums: albums.map(({ album }) => album),
     };
   }
 
-  addTrack(id: string) {
-    const track = getDB().tracks.find((track) => track.id === id);
+  async addTrack(id: string) {
+    const track = await this.trackRepository.findOne({ where: { id } });
     if (!track) throw new BusinessError('Track not found', 422);
-    this.favourites.tracks.push(id);
+    const favTrack = await this.favTracksRepository.create({ trackId: id });
+    await this.favTracksRepository.insert(favTrack);
   }
 
-  addArtist(id: string) {
-    const artist = getDB().artists.find((artist) => artist.id === id);
+  async addArtist(id: string) {
+    const artist = await this.artistRepository.findOne({ where: { id } });
     if (!artist) throw new BusinessError('Artist not found', 422);
-    this.favourites.artists.push(id);
+    const favArtist = await this.favArtistsRepository.create({ artistId: id });
+    await this.favArtistsRepository.insert(favArtist);
   }
 
-  addAlbum(id: string) {
-    const album = getDB().albums.find((album) => album.id === id);
+  async addAlbum(id: string) {
+    const album = await this.albumRepository.findOne({ where: { id } });
     if (!album) throw new BusinessError('Album not found', 422);
-    this.favourites.albums.push(id);
+    const favAlbum = await this.favAlbumsRepository.create({ albumId: id });
+    await this.favAlbumsRepository.insert(favAlbum);
   }
 
-  deleteTrack(id: string) {
-    const index = this.favourites.tracks.indexOf(id);
-    if (index === -1) throw new BusinessError('Track is not favourite', 404);
-    this.favourites.tracks.splice(index, 1);
+  async deleteTrack(id: string) {
+    const track = await this.favTracksRepository.findOne({
+      where: { trackId: id },
+    });
+    if (!track) throw new BusinessError('Track is not favourite', 404);
+    await this.favTracksRepository.remove(track);
   }
 
-  deleteArtist(id: string) {
-    const index = this.favourites.artists.indexOf(id);
-    if (index === -1) throw new BusinessError('Artist is not favourite', 404);
-    this.favourites.artists.splice(index, 1);
+  async deleteArtist(id: string) {
+    const artist = await this.favArtistsRepository.findOne({
+      where: { artistId: id },
+    });
+    if (!artist) throw new BusinessError('Artist is not favourite', 404);
+    await this.favArtistsRepository.remove(artist);
   }
 
-  deleteAlbum(id: string) {
-    const index = this.favourites.albums.indexOf(id);
-    if (index === -1) throw new BusinessError('Album is not favourite', 404);
-    this.favourites.albums.splice(index, 1);
+  async deleteAlbum(id: string) {
+    const album = await this.favAlbumsRepository.findOne({
+      where: { albumId: id },
+    });
+    if (!album) throw new BusinessError('Album is not favourite', 404);
+    await this.favAlbumsRepository.remove(album);
   }
 }

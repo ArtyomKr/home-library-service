@@ -4,6 +4,16 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker](https://docs.docker.com/engine/install/) install Docker.
+
+## 🚨Before downloading🚨
+One of my reviewers experienced the following [issue](https://stackoverflow.com/questions/51113531/docker-compose-no-such-file-or-directory-for-sh-command)
+This may make **building postgres DB impossible**. To prevent this please run:
+
+```
+git config --global core.autocrlf false
+```
+**before** cloning the repo.
 
 ## Downloading
 
@@ -11,66 +21,93 @@
 git clone {repository URL}
 ```
 
-## Installing NPM modules
+## Composing docker containers
+
+Run inside repository root:
 
 ```
-npm install
+docker-compose up
 ```
+If command is exiting with ERR_SOCKET_TIMEOUT **retry the command.**  
+It can take up to 10 min to fully download and install packages.
 
 ## Running application
 
-```
-npm start
-```
+After composing both containers should be running.
+
+Application should restart after changes in `/src` folder.
+
+DB migrations should run **automatically**, but you can trigger
+them manually with `npm run migration:run` (or with `docker exec web-server npm run migration:run` for running container)
+
+DB logs are stored in `home-lib-service_db-data` volume, DB data is stored in `home-lib-service_db-logs` volume.
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+## Stopping application
+
+```
+docker-compose down   
+```
+
+## Deleting images & volumes
+
+**Deleting images:**
+
+```
+docker image rm home-lib-service-web-server 
+docker image rm home-lib-service-db
+```
+
+**Deleting volumes:**
+
+```
+docker volume rm home-lib-service_db-data
+docker volume rm home-lib-service_db-logs
+```
+
+
+## Vulnerability scanning
+
+You can scan for vulnerabilities using `docker scout` (container should be built). Run scanner with:
+
+```
+npm run scout:scan
+```
+
 ## Testing
 
-After application running open new terminal and enter:
+After both containers are running you can open new terminal tab
+and connect to server container and start testing with following commands:
 
 To run all tests without authorization
 
 ```
-npm run test
+docker exec web-server npm run test 
 ```
 
 To run only one of all test suites
 
 ```
-npm run test -- <path to suite>
+docker exec web-server npm run test -- <path to suite>
 ```
 
 To run all test with authorization
 
 ```
-npm run test:auth
+docker exec web-server npm run test:auth
 ```
 
 To run only specific test suite with authorization
 
 ```
-npm run test:auth -- <path to suite>
+docker exec web-server npm run test:auth -- <path to suite>
 ```
 
-### Auto-fix and format
+Alternatively you can use Docker Desktop app and select:
 
-```
-npm run lint
-```
+`Containers -> home-lib-service -> web-server -> Terminal`
 
-```
-npm run format
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
-
-## Swagger
-
-Swagger UI is available at ```localhost:{port}/doc```
+After that you can input `npm run test` into terminal field to run all tests.

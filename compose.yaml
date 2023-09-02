@@ -1,0 +1,53 @@
+name: home-lib-service
+services:
+  web-server:
+    container_name: web-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run start:dev
+    restart: on-failure
+    volumes:
+      - ./src:/usr/app/src
+    environment:
+      - PG_HOST=$PG_HOST
+      - PORT=$PORT
+    ports:
+      - $PORT:$PORT
+    depends_on:
+       db:
+         condition: service_healthy
+    networks:
+      - home-lib-network
+  db:
+    container_name: db
+    build:
+      context: /postgres
+      dockerfile: DockerfilePostgres
+    restart: always
+    user: $POSTGRES_USER
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - db-logs:/var/lib/postgresql/logs
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    ports:
+      - $PG_PORT:$PG_PORT
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      home-lib-network:
+        aliases:
+          - $PG_HOST
+volumes:
+  db-data:
+    driver: local
+  db-logs:
+    driver: local
+networks:
+  home-lib-network:
+    driver: bridge

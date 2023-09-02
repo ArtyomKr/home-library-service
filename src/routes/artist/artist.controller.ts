@@ -16,14 +16,17 @@ import {
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
-@ApiTags('Artist endpoints')
 @Controller('artist')
+@UseFilters(BusinessErrorFilter)
+@ApiTags('Artist endpoints')
+@ApiBearerAuth('access-token')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
@@ -53,7 +56,6 @@ export class ArtistController {
     summary: 'Get artist',
     description: 'Get artist by id',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiNotFoundResponse({ description: 'Artist not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -67,7 +69,6 @@ export class ArtistController {
     summary: 'Change artist',
     description: 'Change artist with specified id',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiNotFoundResponse({ description: 'Artist not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -85,7 +86,6 @@ export class ArtistController {
     description: 'Delete artist with specified id',
   })
   @HttpCode(204)
-  @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })
   @ApiNotFoundResponse({ description: 'Artist not found' })
   @ApiBadRequestResponse({

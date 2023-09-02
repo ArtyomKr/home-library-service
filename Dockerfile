@@ -4,7 +4,9 @@ STOPSIGNAL SIGINT
 
 WORKDIR /usr/app
 
-RUN chown node:node /usr/app
+RUN chown -R node:node /usr/app
+
+RUN mkdir -p /usr/app/logs && chown -R node:node /usr/app/logs
 
 USER node
 

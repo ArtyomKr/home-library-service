@@ -16,14 +16,17 @@ import {
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
-@ApiTags('Track endpoints')
 @Controller('track')
+@UseFilters(BusinessErrorFilter)
+@ApiTags('Track endpoints')
+@ApiBearerAuth('access-token')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
@@ -53,7 +56,6 @@ export class TrackController {
     summary: 'Get track',
     description: 'Get track by id',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiNotFoundResponse({ description: 'Track not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -67,7 +69,6 @@ export class TrackController {
     summary: 'Change track',
     description: 'Change track with specified id',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiNotFoundResponse({ description: 'Track not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -85,7 +86,6 @@ export class TrackController {
     description: 'Delete track with specified id',
   })
   @HttpCode(204)
-  @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })
   @ApiNotFoundResponse({ description: 'Track not found' })
   @ApiBadRequestResponse({

@@ -16,14 +16,17 @@ import {
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { BusinessErrorFilter } from '../../utils/businessError.filter';
 
-@ApiTags('Album endpoints')
 @Controller('album')
+@UseFilters(BusinessErrorFilter)
+@ApiTags('Album endpoints')
+@ApiBearerAuth('access-token')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
@@ -53,7 +56,6 @@ export class AlbumController {
     summary: 'Get album',
     description: 'Get album by id',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiNotFoundResponse({ description: 'Album not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -67,7 +69,6 @@ export class AlbumController {
     summary: 'Change album',
     description: 'Change album with specified id',
   })
-  @UseFilters(BusinessErrorFilter)
   @ApiNotFoundResponse({ description: 'Album not found' })
   @ApiBadRequestResponse({
     description: 'Bad request, body does not contain required fields',
@@ -85,7 +86,6 @@ export class AlbumController {
     description: 'Delete album with specified id',
   })
   @HttpCode(204)
-  @UseFilters(BusinessErrorFilter)
   @ApiNoContentResponse({ description: 'Record was deleted' })
   @ApiNotFoundResponse({ description: 'Album not found' })
   @ApiBadRequestResponse({
